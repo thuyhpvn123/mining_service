@@ -14,7 +14,6 @@ import (
 	"github.com/meta-node-blockchain/mining-service/internal/model"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	e_common "github.com/ethereum/go-ethereum/common"
 )
 
 type SendTransactionService interface {
@@ -38,23 +37,23 @@ type SendTransactionService interface {
 type sendTransactionService struct {
 	chainClientAdminNoti        *client.Client
 	notiStorageAbi     *abi.ABI
-	notiStorageAddress e_common.Address
-	adminNoti          e_common.Address
+	notiStorageAddress common.Address
+	adminNoti          common.Address
 	chainClientBeMinningUser        *client.Client
 	miningUserAbi      *abi.ABI
-	miningUserAddress  e_common.Address
-	beMinningUser      e_common.Address
+	miningUserAddress  common.Address
+	beMinningUser      common.Address
 }
 
 func NewSendTransactionService(
 	chainClientAdminNoti        *client.Client,
 	notiStorageAbi *abi.ABI,
-	notiStorageAddress e_common.Address,
-	adminNoti e_common.Address,
+	notiStorageAddress common.Address,
+	adminNoti common.Address,
 	chainClientBeMinningUser        *client.Client,
 	miningUserAbi *abi.ABI,
-	miningUserAddress e_common.Address,
-	beMinningUser e_common.Address,
+	miningUserAddress common.Address,
+	beMinningUser common.Address,
 ) SendTransactionService {
 	return &sendTransactionService{
 		chainClientAdminNoti:        chainClientAdminNoti,
@@ -85,7 +84,7 @@ func (h *sendTransactionService) sendTransactionAndGetResult(
 		return nil, err
 	}
 
-	relatedAddress := []e_common.Address{}
+	relatedAddress := []common.Address{}
 	maxGas := uint64(5_000_000)
 	maxGasPrice := uint64(1_000_000_000)
 	timeUse := uint64(0)
@@ -93,6 +92,13 @@ func (h *sendTransactionService) sendTransactionAndGetResult(
 	for attempt := 1; attempt <= attempts; attempt++ {
 		ch := make(chan model.ResultData, 1)
 		go func() {
+			defer func() {
+				if r := recover(); r != nil {
+					logger.Error("Recovered panic in goroutine", fmt.Errorf("%v", r))
+				}
+			}()
+
+			logger.Info("Before sending transaction")
 			receipt, err := chainClient.SendTransactionWithDeviceKey(
 				from,
 				to,
@@ -103,6 +109,8 @@ func (h *sendTransactionService) sendTransactionAndGetResult(
 				maxGasPrice,
 				timeUse,
 			)
+			logger.Info("After sending transaction")
+			fmt.Println("receipt:",receipt, "err:", err)
 			ch <- model.ResultData{
 				Receipt: receipt,
 				Err:     err,
@@ -276,7 +284,7 @@ func (h *sendTransactionService) ActiveUserByBe(
 // 		return nil, err
 // 	}
 // 	fmt.Println("input: ", hex.EncodeToString(bData))
-// 	relatedAddress := []e_common.Address{}
+// 	relatedAddress := []common.Address{}
 // 	maxGas := uint64(5_000_000)
 // 	maxGasPrice := uint64(1_000_000_000)
 // 	timeUse := uint64(0)
@@ -336,7 +344,7 @@ func (h *sendTransactionService) ActiveUserByBe(
 // 		return nil, err
 // 	}
 // 	fmt.Println("input: ", hex.EncodeToString(bData))
-// 	relatedAddress := []e_common.Address{}
+// 	relatedAddress := []common.Address{}
 // 	maxGas := uint64(5_000_000)
 // 	maxGasPrice := uint64(1_000_000_000)
 // 	timeUse := uint64(0)
@@ -383,7 +391,7 @@ func (h *sendTransactionService) ActiveUserByBe(
 // 	fmt.Println("input: ", hex.EncodeToString(bData))
 // 	fmt.Println("h.adminNoti:", h.adminNoti)
 // 	fmt.Println("h.notiStorageAddress:", h.notiStorageAddress)
-// 	relatedAddress := []e_common.Address{}
+// 	relatedAddress := []common.Address{}
 // 	maxGas := uint64(5_000_000)
 // 	maxGasPrice := uint64(1_000_000_000)
 // 	timeUse := uint64(0)

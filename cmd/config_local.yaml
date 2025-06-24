@@ -1,9 +1,9 @@
 MYSQL_URL: "root:password@tcp(127.0.0.1:3306)/mining_service?charset=utf8mb4&parseTime=True&loc=Local"
 MetaNodeVersion: "0.0.1.0"
-DnsLink_: "http://rpc-proxy-sequoia.ibe.app:7080/api/dns/connection-address/"
+DnsLink_: "http://127.0.0.1:7080/api/dns/connection-address/"
 
 NodeConnectionAddress: "node"
-ParentConnectionAddress: "rpc-proxy-sequoia.ibe.app:4200"
+ParentConnectionAddress: "0.0.0.0:4200"
 ParentConnectionType: "client"
 ConnectionAddress_: "0x1eF5a8c5403c5aA1d43a8DC9eD391351012551Cf"
 ChainId: 991
@@ -14,12 +14,12 @@ StorageConnectionAddress: "storage"
 # ParentAddress: "1a88a805a355a8a1d77a3f953b1b9840629b3f25"
 
 MiningUserABIPath: "../abi/miningUser.json"
-MiningUserAddress: "0xc4F79eCec419F263f8B9B6B5cF4e855F88edC702"
+MiningUserAddress: "0xB44CdbC7824b76d7dC048Fef71B10eD39F54a34f"
 BeMiningUserAddress: "81be168b04f315f263288034c0fb33d30ad32353"
 PrivateKeyBeMiningUser : "7290eb4d7e7a4be8b92768107adc681932b44f6b92850774e738cce309892676"
 
 NotiStorageABIPath: "../abi/notiStorage.json"
-NotiStorageAddress: "52d386c57bf6e478ec5ece3b5868df1044b4b948"
+NotiStorageAddress: "30c306387b52142ed38675aff05e5258374fd3ea"
 NotiOwnerAddress: "1a88a805a355a8a1d77a3f953b1b9840629b3f25" # Admin Address to addNoti
 PrivateKeyAdminNoti: "1fbd20a6be9131956140196ef7a75f67a4822607caaf033993ea0e24b0de2309"
 
@@ -27,4 +27,4 @@ ServerPrivateKeyPath: "./private_key"
 
 PathLevelDB: "../db"
 StoredPubKey: "./public_key"
-RpcURL: "https://rpc-proxy-sequoia.ibe.app:8446"
+RpcURL: "http://localhost:8545"
